@@ -1,0 +1,28 @@
+services:
+  proxy:
+    build: .
+    image: commandcode-proxy-rs:latest
+    container_name: commandcode-proxy-rs
+    ports:
+      - "${PROXY_PORT:-3050}:3050"
+    environment:
+      PORT: "3050"
+      HOST: "0.0.0.0"
+      # 上游地址，默认官方；换自建网关时打开
+      # CC_API_BASE: "https://api.commandcode.ai"
+      # 需要经本地 HTTP 代理出网时打开（容器内访问宿主机用 host.docker.internal）
+      # CC_UPSTREAM_PROXY: "http://host.docker.internal:7890"
+      # 流式/非流式上游读空闲超时
+      # CC_STREAM_IDLE_MS: "30000"
+      # CC_NONSTREAM_IDLE_MS: "90000"
+      # 在途请求上限（0 = 不限）
+      # CC_MAX_INFLIGHT: "0"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3050/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
