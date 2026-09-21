@@ -5,6 +5,10 @@ edition = "2021"
 rust-version = "1.75"
 description = "Command Code -> OpenAI / Anthropic 兼容反向代理（Rust 重写）"
 license = "MIT"
+repository = "https://github.com/maple323/commandcode-proxy-rs"
+readme = "README.md"
+keywords = ["proxy", "openai", "anthropic", "commandcode", "llm"]
+categories = ["web-programming::http-server", "command-line-utilities"]
 
 [[bin]]
 name = "commandcode-proxy"

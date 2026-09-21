@@ -36,7 +36,31 @@ curl http://127.0.0.1:3050/v1/chat/completions \
   -d '{"model":"deepseek/deepseek-v4-flash","messages":[{"role":"user","content":"hi"}]}'
 ```
 
+### 下载预编译二进制
+
+到 [Releases](https://github.com/maple323/commandcode-proxy-rs/releases) 取对应平台的文件，
+每个产物都附在 `SHA256SUMS.txt` 里：
+
+| 平台 | 文件 |
+|---|---|
+| Linux x86_64 | `commandcode-proxy-x86_64-unknown-linux-gnu.tar.gz` |
+| Linux aarch64 | `commandcode-proxy-aarch64-unknown-linux-gnu.tar.gz` |
+| macOS (Apple Silicon) | `commandcode-proxy-aarch64-apple-darwin.tar.gz` |
+| Windows x86_64 | `commandcode-proxy-x86_64-pc-windows-msvc.zip` |
+
 ### Docker
+
+已发布多架构镜像（`linux/amd64` + `linux/arm64`），直接拉取即可：
+
+```bash
+docker run -d --name commandcode-proxy \
+  -p 3050:3050 \
+  -e PORT=3050 \
+  --restart unless-stopped \
+  ghcr.io/maple323/commandcode-proxy-rs:latest
+```
+
+或者从源码本地构建：
 
 ```bash
 docker compose up -d --build          # 端口由 PROXY_PORT 控制，默认 3050
