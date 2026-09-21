@@ -35,6 +35,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 生成 OCI 元数据
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          labels: |
+            org.opencontainers.image.title=commandcode-proxy
+            org.opencontainers.image.description=Command Code (CC) API 的 Rust 重写代理：把 CC 转成 OpenAI Chat Completions / OpenAI Responses / Anthropic Messages 三种下游协议（SSE + 非流式）
+            org.opencontainers.image.licenses=MIT
+
       - name: 构建并推送（按 digest，不直接打标签）
         id: build
         uses: docker/build-push-action@v6
@@ -42,6 +52,7 @@ jobs:
           context: .
           platforms: ${{ matrix.platform }}
           outputs: type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=true
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.slug }}
           cache-to: type=gha,mode=max,scope=${{ matrix.slug }}
 
